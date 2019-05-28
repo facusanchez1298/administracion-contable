@@ -338,7 +338,7 @@ namespace administracion_contable
             {
                 double flotante;// variable float
                 double.TryParse(texto, out flotante);
-                if (!texto.Contains(".")) this.textBoxMonto.Text = flotante.ToString("0.00");
+                
             }
         }
 
@@ -413,6 +413,7 @@ namespace administracion_contable
                                 montarEnCampos(elemento); //luego carga el elemento en los campos
                                 this.groupBox.Show(); //muestra botones para guardar o cancelar
                                 this.buttonBorrar.Show();//muestra el boton de borrar
+                                selector.Enabled = false;
                             }
                             else
                             {
@@ -499,6 +500,7 @@ namespace administracion_contable
             cambiarHabilitacionAgregar(false); //deshabilito los controles de agregar
             this.groupBox.Visible = false;            
             this.buttonBorrar.Visible = false;
+            selector.Enabled = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -564,8 +566,10 @@ namespace administracion_contable
                         {
                             
                             this.conexion.asentarLibroDiario(labelDia.Text);
+                            this.cargarSelector();
 
-                            this.labelDia.Text = this.conexion.numeroDelDia().ToString(); //cambiamos el numero de folio
+                            this.selector.SelectedIndex = this.conexion.numeroDelDia() - 1;
+                            this.labelDia.Text = selector.Text;
                             
 
                             elementosLibroDiario.Clear(); //limpiamos la lista
@@ -578,7 +582,7 @@ namespace administracion_contable
                         }
                         mostrarMensajeGuardado("libro diario guardado");
                         selector.Enabled = true;
-                        cambiarHabilitacionAgregar(false);
+                        cambiarHabilitacionAgregar(true);
                     }
                 }
                 else mostrarMensajeError("libro diario no esta valanceado");
@@ -638,16 +642,17 @@ namespace administracion_contable
 
         private void menu_editar(object sender, EventArgs e)
         {
-            menuAgregarElemento.Enabled = true;
-            menuEditarElemento.Enabled = false;
+            
 
             int dia = int.Parse(labelDia.Text);
             if ((elementosLibroDiario.Any() && dia == conexion.numeroDelDia()) || ( lista.Any() && dia != conexion.numeroDelDia()))
             {
-                selector.Enabled = false;
+                
                 cambiarHabilitacionAgregar(false);
                 cambiarHabilitacionEdicion(true);
                 this.buttonAgregar.Hide();
+                menuAgregarElemento.Enabled = true;
+                menuEditarElemento.Enabled = false;
             }
             else mostrarMensajeError("aun no hay elementos para editar");
 
@@ -670,8 +675,8 @@ namespace administracion_contable
             this.comboBox1.SelectedIndex = 0;
             this.comboBox1.SelectedIndex = 0;
             this.textBoxMonto.Text = "0.00";
-            
 
+           
 
         }
 
@@ -699,7 +704,8 @@ namespace administracion_contable
             cargarTabla(elementosLibroDiario);       
             cambiarHabilitacionAgregar(true);
             cargarSelector();
-            
+            this.selector.SelectedIndex = conexion.numeroDelDia() - 1;
+
 
         }
 
@@ -744,9 +750,7 @@ namespace administracion_contable
                                                       // this.textBoxGrupo.Text = darGrupo(id); //cambiamos el texto a grupo
             }
 
-            //ocultamos el selector de dias
-            //selector.Hide();
-
+            
             //seleccionamos index del debe/haber
             this.comboBoxDebeHaber.SelectedIndex = 0;
 
@@ -757,7 +761,7 @@ namespace administracion_contable
             totales(elementosLibroDiario);
 
             //monto = 0.00
-            this.textBoxMonto.Text = "0.00";
+            this.textBoxMonto.Text = "0,00";
 
             //numero de libro
             this.labelDia.Text = this.conexion.numeroDelDia().ToString();
@@ -765,6 +769,9 @@ namespace administracion_contable
 
             //cargamos libro
             cargarSelector();
+            this.selector.SelectedIndex = int.Parse(labelDia.Text) - 1;
+
+            menuEditarElemento.Enabled = true;
         }
 
         /// <summary>
@@ -879,15 +886,15 @@ namespace administracion_contable
             this.buttonAgregar.Enabled = habilitacion;
             this.checkedListBox1.Enabled = habilitacion;
 
-            if (!habilitacion)
-            {
-                //vaciarCamposDeTexto();
-            }
-            else
-            {
-                this.comboBox1.SelectedIndex = 0;
-                this.comboBoxDebeHaber.SelectedIndex = 0;
-            }
+            //if (!habilitacion)
+            //{
+            //    //vaciarCamposDeTexto();
+            //}
+            //else
+            //{
+            //    this.comboBox1.SelectedIndex = 0;
+            //    this.comboBoxDebeHaber.SelectedIndex = 0;
+            //}
         }
 
         /// <summary>
@@ -953,7 +960,10 @@ namespace administracion_contable
                             }
                             else this.mostrarMensajeError("el monto debe ir con coma, no con punto.");
                         }
-                        else preguntarSiAgregar();
+                        else if(preguntarSiAgregar())
+                        {
+                            agregarElemento();
+                        }
                     }
                     else mostrarMensajeError("el primer caracter de tu codigo debe estar entre el 1 y el 7 en referencia a su grupo:\n\n" +
                         "\t1. Activo\n" +
@@ -985,7 +995,7 @@ namespace administracion_contable
         /// pregunta si se desea agregar un elemento al plan contable, en caso de que la respuesta sea si
         /// se lo crea y se lo guarda, en caso contrario no se hace nada
         /// </summary>
-        private void preguntarSiAgregar()
+        private bool preguntarSiAgregar()
         {
             string respuesta = mostrarMensajeConfirmacion("El codigo no existe ¿desearia agregarlo al plan contable?");
 
@@ -998,9 +1008,10 @@ namespace administracion_contable
                 this.comboBox1.Items.Clear();
                 Conexion.cargarComboBox(this.comboBox1);
                 comboBox1.SelectedIndex = comboBox1.FindString(comboBox1.Text);
-                agregarElemento();
+                return true;
             }
             else this.mostrarMensajeError("El numero del codigo no es corecto.");
+            return false;
         }
 
         /// <summary>
@@ -1048,9 +1059,10 @@ namespace administracion_contable
                     }
                     else this.mostrarMensajeError("Debe seleccionar la documentacion respaldatoria.");
                 }
-                else this.mostrarMensajeError("el numero del codigo no es corecto");
-
-
+                else if(preguntarSiAgregar())
+                {
+                    editarElemento(index);
+                }
             }
             else this.mostrarMensajeError("rellene todos los campos para continuar");
             return false;
@@ -1082,7 +1094,7 @@ namespace administracion_contable
         private void montarEnCampos(ElementoLibroDiario elemento)
         {
             //si no inicializo asi por alguna razon queda en blanco
-            this.comboBox1.SelectedIndex = 1;
+            //this.comboBox1.SelectedIndex = 1;
             this.comboBoxDebeHaber.SelectedIndex = 1;
 
 
@@ -1136,8 +1148,12 @@ namespace administracion_contable
 
             if (esDecimal(selector.Text))
             {
+
                 if (conexion.numeroDelDia() == int.Parse(selector.Text)) cambiarHabilitacionAgregar(true);
-                else cambiarHabilitacionAgregar(false);
+                else
+                {
+                    cambiarHabilitacionAgregar(false);
+                }
                 
                 this.conexion.cargarLibroDiario(int.Parse(selector.Text), lista);
                 this.labelDia.Text = selector.Text;
@@ -1154,6 +1170,7 @@ namespace administracion_contable
         /// </summary>
         public void cargarSelector()
         {
+            selector.Items.Clear();
             int maximo = this.conexion.numeroDelDia();
 
             for (int i = 1; i <= maximo; i++)
@@ -1161,7 +1178,7 @@ namespace administracion_contable
                 selector.Items.Add(i);
             }
 
-            this.selector.SelectedIndex = int.Parse(labelDia.Text) - 1;
+            
         }
 
         //
@@ -1187,27 +1204,38 @@ namespace administracion_contable
             string caracter; //el caracter que vamos a controlar lo cargamos aca 
             bool bandera = true;
 
-            int i = 0;
-            while (bandera)
+            try
             {
-                caracter = cadena.ElementAt(i).ToString();
-                while (int.TryParse(caracter, out numero))
-                {
-                    caracter = cadena.ElementAt(i).ToString();
-                    i++;
-                }
+                int i = 0;
                 while (bandera)
                 {
-                    nuevo += cadena.ElementAt(i);
-                    i++;
-                    if(i >= cadena.Length)
-                    {
-                        bandera = false;
-                    }
-                }  
-            }
+                    caracter = cadena.ElementAt(i).ToString();
 
-            return nuevo;
+                    while (int.TryParse(caracter, out numero))
+                    {
+                        i++;
+                        caracter = cadena.ElementAt(i).ToString();
+                        
+                    }
+                    while (bandera)
+                    {
+                        nuevo += cadena.ElementAt(i);
+                        i++;
+                        if (i >= cadena.Length)
+                        {
+                            bandera = false;
+                        }
+                    }
+                }
+
+                return nuevo;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception("error: " + e);
+            }
+            
             
         }
 

@@ -129,7 +129,7 @@ namespace administracion_contable
         {
             string numero = this.textBoxIndex.Text;
             if (esNumeral(numero))
-            {
+            {              
                 this.CodigoBuscado = numero;
                 // hay que verificar si existe
                 ElementoPlanContable elemento = elementosPlanContables.Find(q => q.numeroIdentificador == numero);
@@ -137,16 +137,19 @@ namespace administracion_contable
                 if (elemento != null)
                 {
                     Conexion conexion = new Conexion();
-                    elemento = conexion.buscarElementoPlanContable(numero);
+                    if (!conexion.yaTieneAsiento(CodigoBuscado))
+                    {                        
+                        elemento = conexion.buscarElementoPlanContable(numero);
 
-                    cargarElementoEnCampos(elemento);
-                    habilitarAgregar(true);
-                    this.groupBox.Enabled = true;
-                    this.buttonBorrar.Enabled = true;
+                        cargarElementoEnCampos(elemento);
+                        habilitarAgregar(true);
+                        this.groupBox.Enabled = true;
+                        this.buttonBorrar.Enabled = true;
 
-                    if (conexion.yaTieneAsiento(CodigoBuscado)) this.checkBox1.Enabled = false;//no dejo que lo editen
-                    
-                   
+                        if (conexion.yaTieneAsiento(CodigoBuscado)) this.checkBox1.Enabled = false;//no dejo que lo editen
+                    }
+                    else mostrarMensajeError("El codigo no se puede editar por que ya tiene asiento en el libro diario");
+
                 }
                 else mostrarMensajeError("el indice ingresado no existe");
             }
@@ -157,21 +160,26 @@ namespace administracion_contable
         {
             if (!elementosVacios())
             {
-                string nombre = this.textNombre.Text;
-                string numero = this.textId.Text + this.textNumero.Text;
-                bool registrable = this.checkBox1.Checked;
+                string numeroIdentificador = this.textId.Text + this.textNumero.Text;
+                if (!existe(numeroIdentificador))
+                {
+                    string nombre = this.textNombre.Text;
+                    string numero = this.textId.Text + this.textNumero.Text;
+                    bool registrable = this.checkBox1.Checked;
 
-                Conexion conexion = new Conexion();
-                conexion.modificarElementoPlanContable(this.CodigoBuscado, registrable, numero, nombre);
-                mostrarMensajeGuardado("el elemento se modifico correctamente");
+                    Conexion conexion = new Conexion();
+                    conexion.modificarElementoPlanContable(this.CodigoBuscado, registrable, numero, nombre);
+                    mostrarMensajeGuardado("el elemento se modifico correctamente");
 
-                //refrescamos la tabla
-                actualizar();
-                this.habilitarEdicion(true);
-                this.groupBox.Enabled = false;
-                this.buttonBorrar.Enabled = false;
-                habilitarAgregar(false);
-                this.textBoxIndex.Text = "";
+                    //refrescamos la tabla
+                    actualizar();
+                    this.habilitarEdicion(true);
+                    this.groupBox.Enabled = false;
+                    this.buttonBorrar.Enabled = false;
+                    habilitarAgregar(false);
+                    this.textBoxIndex.Text = "";
+                }
+                else this.mostrarMensajeError("la cadena ingresada en el campo numero no es numerica. por favor no ingrese letras ni simbolos");
             }
             else mostrarMensajeError("complete todos los campos antes de guardar");
 
@@ -187,8 +195,7 @@ namespace administracion_contable
         {
             Conexion conexion = new Conexion();
            
-            if (!conexion.yaTieneAsiento(CodigoBuscado))
-            {
+           
                 string respuesta = mostrarMensajeConfirmacion("¿Esta seguro que desea eliminar el elemento codigo: " + CodigoBuscado + ". de forma permanente?");
 
                 if (respuesta.Equals("OK"))
@@ -202,7 +209,7 @@ namespace administracion_contable
                     habilitarAgregar(false);
                     this.textBoxIndex.Text = "";
                 }
-            }
+            
             else mostrarMensajeError("El codigo no se puede borrar por que ya tiene asiento en el libro diario");
         }
 

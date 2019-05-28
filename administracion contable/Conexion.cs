@@ -14,7 +14,7 @@ namespace administracion_contable
         String crearPlanContable = "create table if not exists elementosDelPlanContables(" +
                                         "registrado boolean," +
                                         "numeroIdentificador varchar," +
-                                        "nombre varchar)";
+                                        "nombre varchar);";
 
         String crearLibroDiario = "create table if not exists LibrosDiarios(" +
                                         "dia int," +
@@ -25,11 +25,11 @@ namespace administracion_contable
                                         "transaccion varchar," +
                                         "documentacion varchar," +
                                         "asentado boolean," +
-                                        "indice int)";
+                                        "indice int);";
 
         String crearFecha = "create table if not exists fecha(" +
                                  "inicio varchar," +
-                                 "fin varchar)";
+                                 "fin varchar);";
 
 
 
@@ -67,19 +67,19 @@ namespace administracion_contable
             try
             {
                 conectar();
-                SqliteCommand command = new SqliteCommand(crearPlanContable, this.Connection);
+                SqliteCommand command = new SqliteCommand(crearPlanContable + crearLibroDiario + crearFecha, this.Connection);
                 command.ExecuteNonQuery();
                 command.Connection.Close();
 
-                conectar();
-                command = new SqliteCommand(crearLibroDiario, this.Connection);
-                command.ExecuteNonQuery();
-                command.Connection.Close();
+                //conectar();
+                //command = new SqliteCommand(crearLibroDiario, this.Connection);
+                //command.ExecuteNonQuery();
+                //command.Connection.Close();
 
-                conectar();
-                command = new SqliteCommand(crearFecha, this.Connection);
-                command.ExecuteNonQuery();
-                command.Connection.Close();
+                //conectar();
+                //command = new SqliteCommand(crearFecha, this.Connection);
+                //command.ExecuteNonQuery();
+                //command.Connection.Close();
             }
             catch (Exception e)
             {
@@ -94,9 +94,7 @@ namespace administracion_contable
             
 
         }
-
-
-
+               
         /// <summary>
         /// cierra la base de datos
         /// </summary>
@@ -124,7 +122,33 @@ namespace administracion_contable
                                          MessageBoxIcon.Error);
         }
 
+        public void borrarBaseDeDatos()
+        {
+            if (File.Exists("datos contables"))
+            {
+                File.Delete("datos contables");
+                SQLiteConnection.CreateFile("datos contables");
+            }
 
+            try
+            {
+                conectar();
+                SqliteCommand command = new SqliteCommand(crearPlanContable + crearLibroDiario + crearFecha, this.Connection);
+                command.ExecuteNonQuery();
+                command.Connection.Close();
+                                
+            }
+            catch (Exception e)
+            {
+                mostrarMensaje("Error: " + e);
+                throw new Exception("Error: " + e);
+            }
+            finally
+            {
+                close();
+
+            }
+        }
            
 
 

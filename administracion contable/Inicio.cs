@@ -61,5 +61,33 @@ namespace administracion_contable
                 this.Hide();
             }
         }
+
+        private void formatearDatosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            string respuesta = mostrarMensajeConfirmacion("esta seguro que desea eliminar todos los datos de forma permanente?");
+
+            if (respuesta.Equals("OK"))
+            {
+                Conexion conexion = new Conexion();
+                conexion.borrarBaseDeDatos();
+            }
+            
+        }
+
+        /// <summary>
+        /// hace una pregunta al usuario para confirmar su decision
+        /// </summary>
+        /// <param name="mensaje"></param>
+        /// <returns>retorna OK si el usuario acepta, cancel si no acepta</returns>
+        public String mostrarMensajeConfirmacion(string mensaje)
+        {
+            const string caption = "Datos Erroneos";
+            var result = MessageBox.Show(mensaje, caption,
+                                         MessageBoxButtons.OKCancel,
+                                         MessageBoxIcon.Warning);
+
+            return result.ToString();//puede ser ok o cancel
+        }
     }
 }
