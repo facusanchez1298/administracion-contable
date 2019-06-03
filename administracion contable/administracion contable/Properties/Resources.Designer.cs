@@ -63,9 +63,39 @@ namespace administracion_contable.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _5f6acd2ede815a125e954977821f8ed3 {
+            get {
+                object obj = ResourceManager.GetObject("5f6acd2ede815a125e954977821f8ed3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Definición_de_Libro_Diario_ {
             get {
                 object obj = ResourceManager.GetObject("Definición-de-Libro-Diario.", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap maderas2 {
+            get {
+                object obj = ResourceManager.GetObject("maderas2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap REEMPADRONAMIENTO_ARBA {
+            get {
+                object obj = ResourceManager.GetObject("REEMPADRONAMIENTO-ARBA", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
