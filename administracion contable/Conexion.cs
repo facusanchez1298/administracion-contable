@@ -25,7 +25,8 @@ namespace administracion_contable
                                         "transaccion varchar," +
                                         "documentacion varchar," +
                                         "asentado boolean," +
-                                        "indice int);";
+                                        "indice int," +
+                                        "descripcion);";
 
         String crearFecha = "create table if not exists fecha(" +
                                  "inicio varchar," +
@@ -330,12 +331,15 @@ namespace administracion_contable
             string monto = elemento.monto;
             string transaccion = elemento.transaccion;
             int index = elemento.index;
+            string descripcion = elemento.descripcion;
+
+      
 
             try
             {
                 conectar();
-                string sql = "insert into LibrosDiarios(dia, codigo, fecha, nombre, monto, transaccion, documentacion, asentado, indice)" +
-                    " values (" + dia + ",'" + codigo + "','" + fecha + "','" + nombre + "','" + monto + "','" + transaccion + "','" + documentacion + "'," + false + "," + index + ")";
+                string sql = "insert into LibrosDiarios(dia, codigo, fecha, nombre, monto, transaccion, documentacion, asentado, indice, descripcion)" +
+                    " values (" + dia + ",'" + codigo + "','" + fecha + "','" + nombre + "','" + monto + "','" + transaccion + "','" + documentacion + "'," + false + "," + index + ", '" + descripcion + "')";
 
                 SqliteCommand command = new SqliteCommand(sql, this.Connection);
 
@@ -599,7 +603,6 @@ namespace administracion_contable
             {
                 SqliteDataReader lector = command.ExecuteReader();
 
-
                 while (lector.Read())
                 {
                     //dia,codigo,fecha,monto,transaccion
@@ -610,11 +613,15 @@ namespace administracion_contable
                     string monto = lector.GetString(4);
                     string transaccion = lector.GetString(5);
                     string documentacionRespaldatoria = lector.GetString(6);
-                    int index = lector.GetInt32(7);
+                    int index = lector.GetInt32(8);
+                    string descripcion = lector.GetString(9);
 
+                    
+                    
 
-                    ElementoLibroDiario elementoLibroDiario = new ElementoLibroDiario(dia, codigo, fecha, nombre, monto, transaccion, documentacionRespaldatoria, index);
+                    ElementoLibroDiario elementoLibroDiario = new ElementoLibroDiario(dia, codigo, fecha, nombre, monto, transaccion, documentacionRespaldatoria, index, descripcion);
                     elementosLibroDiario.Add(elementoLibroDiario);
+                    
                 }
 
                 lector.Close();
@@ -676,6 +683,40 @@ namespace administracion_contable
             {
                 conectar();
                 string sql = "update LibrosDiarios set asentado = true where dia = " + numero;
+                SqliteCommand command = new SqliteCommand(sql, this.Connection);
+
+                try
+                {
+                    command.ExecuteNonQuery();
+                    command.Connection.Close();
+                }
+                catch (Exception e)
+                {
+
+                    throw new Exception("Error: " + e);
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception("Error: " + e);
+            }
+            finally
+            {
+                close();
+            }
+
+        }
+
+        public void asentarLibroDiario(string dia, string descripcion)
+        {
+            
+            int numero = int.Parse(dia);
+            try
+            {
+                conectar();
+                string sql = "update LibrosDiarios set asentado = true, descripcion = '" + descripcion + "' where dia = " + numero + ";";
                 SqliteCommand command = new SqliteCommand(sql, this.Connection);
 
                 try

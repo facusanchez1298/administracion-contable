@@ -67,6 +67,7 @@ namespace administracion_contable
             this.menuEditarElemento = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAgregarElemento = new System.Windows.Forms.ToolStripMenuItem();
             this.menuVerDiaActual = new System.Windows.Forms.ToolStripMenuItem();
+            this.verResumenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
@@ -80,6 +81,8 @@ namespace administracion_contable
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.buttonBorrar = new System.Windows.Forms.Button();
             this.selector = new System.Windows.Forms.DomainUpDown();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBoxDescripcion = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menu.SuspendLayout();
             this.groupBox.SuspendLayout();
@@ -98,7 +101,6 @@ namespace administracion_contable
             this.dataGridView1.Size = new System.Drawing.Size(747, 351);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.TabStop = false;
-            this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
             // 
             // comboBox1
             // 
@@ -402,7 +404,8 @@ namespace administracion_contable
             this.opcionesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuEditarElemento,
             this.menuAgregarElemento,
-            this.menuVerDiaActual});
+            this.menuVerDiaActual,
+            this.verResumenToolStripMenuItem});
             this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
             this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.opcionesToolStripMenuItem.Text = "Opciones";
@@ -428,8 +431,15 @@ namespace administracion_contable
             this.menuVerDiaActual.Name = "menuVerDiaActual";
             this.menuVerDiaActual.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
             this.menuVerDiaActual.Size = new System.Drawing.Size(216, 22);
-            this.menuVerDiaActual.Text = "Ver Dia Actual";
+            this.menuVerDiaActual.Text = "Ver Asiento Actual";
             this.menuVerDiaActual.Click += new System.EventHandler(this.menu_verDiaActual);
+            // 
+            // verResumenToolStripMenuItem
+            // 
+            this.verResumenToolStripMenuItem.Name = "verResumenToolStripMenuItem";
+            this.verResumenToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.verResumenToolStripMenuItem.Text = "Ver Resumen";
+            this.verResumenToolStripMenuItem.Click += new System.EventHandler(this.verResumenToolStripMenuItem_Click);
             // 
             // RightToolStripPanel
             // 
@@ -515,9 +525,9 @@ namespace administracion_contable
             this.label10.BackColor = System.Drawing.Color.Transparent;
             this.label10.Location = new System.Drawing.Point(670, 43);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(51, 13);
+            this.label10.Size = new System.Drawing.Size(64, 13);
             this.label10.TabIndex = 21;
-            this.label10.Text = "Folio nroº";
+            this.label10.Text = "Asiento nroº";
             // 
             // label6
             // 
@@ -572,12 +582,30 @@ namespace administracion_contable
             this.selector.Text = "domainUpDown1";
             this.selector.SelectedItemChanged += new System.EventHandler(this.cambiarDia);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 524);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(63, 13);
+            this.label11.TabIndex = 27;
+            this.label11.Text = "Descripcion";
+            // 
+            // textBoxDescripcion
+            // 
+            this.textBoxDescripcion.Location = new System.Drawing.Point(74, 521);
+            this.textBoxDescripcion.Name = "textBoxDescripcion";
+            this.textBoxDescripcion.Size = new System.Drawing.Size(265, 20);
+            this.textBoxDescripcion.TabIndex = 28;
+            // 
             // LibroDiario
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.PowderBlue;
             this.ClientSize = new System.Drawing.Size(771, 549);
+            this.Controls.Add(this.textBoxDescripcion);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.selector);
             this.Controls.Add(this.buttonBorrar);
             this.Controls.Add(this.checkedListBox1);
@@ -675,5 +703,8 @@ namespace administracion_contable
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.Button buttonBorrar;
         private System.Windows.Forms.DomainUpDown selector;
+        private System.Windows.Forms.ToolStripMenuItem verResumenToolStripMenuItem;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textBoxDescripcion;
     }
 }

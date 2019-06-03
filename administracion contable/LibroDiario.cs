@@ -321,7 +321,7 @@ namespace administracion_contable
 
         private void seleccion(object sender, MouseEventArgs e)
         {
-            if (this.textBoxMonto.Text.Equals("0.00")) this.textBoxMonto.Text = "";
+            if (this.textBoxMonto.Text.Equals("0,00")) this.textBoxMonto.Text = "";
         }
 
         private void textBoxMonto_Click(object sender, EventArgs e)
@@ -565,7 +565,7 @@ namespace administracion_contable
                         if (int.Parse(this.labelDia.Text) == conexion.numeroDelDia())
                         {
                             
-                            this.conexion.asentarLibroDiario(labelDia.Text);
+                            this.conexion.asentarLibroDiario(labelDia.Text, textBoxDescripcion.Text);
                             this.cargarSelector();
 
                             this.selector.SelectedIndex = this.conexion.numeroDelDia() - 1;
@@ -686,20 +686,10 @@ namespace administracion_contable
             elementoContable.Show();
             this.Hide();
         }
-        
-        [Obsolete("metodo en desuso", true)]
-        private void menu_verTodo(object sender, EventArgs e)
-        {
-            List<ElementoLibroDiario> elementos = new List<ElementoLibroDiario>();
-            
-            this.conexion.mostrarLibroTotal(elementos);
-            cargarTabla(elementos);
-            this.labelDia.Text = "---";
-        }
-
+    
         private void menu_verDiaActual(object sender, EventArgs e)
         {
-            
+            selector.Enabled = true;
             labelDia.Text = this.conexion.numeroDelDia().ToString();
             cargarTabla(elementosLibroDiario);       
             cambiarHabilitacionAgregar(true);
@@ -778,9 +768,9 @@ namespace administracion_contable
         /// carga la lista ingresada en la tabla
         /// </summary>
         /// <param name="elementosTabla"></param>
-        public void cargarTabla(List<ElementoLibroDiario> elementosTabla)
+        public void cargarTabla(List<ElementoLibroDiario> elementosTabla, bool verTodo = false)
         {
-            //this.elementosLibroDiario = planContables;
+            
 
 
             DataTable dataTable = new DataTable();
@@ -791,8 +781,9 @@ namespace administracion_contable
             dataTable.Columns.Add("debe", typeof(String));
             dataTable.Columns.Add("haber", typeof(String));
             dataTable.Columns.Add("documentacion", typeof(string));
-            
+            if (verTodo == true) dataTable.Columns.Add("descripcion", typeof(string));
 
+            string descripcionAnterior = (elementosTabla.Any())? elementosTabla.ElementAt(0).descripcion : "";
 
             for (int i = 0; i < elementosTabla.Count; i++) //recorremos toda la lista
             {
@@ -803,17 +794,32 @@ namespace administracion_contable
                 string monto = elementosTabla.ElementAt(i).monto;
                 string transaccion = elementosTabla.ElementAt(i).transaccion;
                 string documentacion = elementosTabla.ElementAt(i).documentacionRespaldatoria;
-
                 string dia = elementosTabla.ElementAt(i).dia.ToString();
+                string descripcion = elementosTabla.ElementAt(i).descripcion;
 
-                if (transaccion.Equals("HABER"))
-                {
-                    dataTable.Rows.Add((i + 1), id, fecha, nombre, "", monto, documentacion); //generamos un registro con los datos que sacamos de la lista
-                }
-                else
-                {
-                    dataTable.Rows.Add((i + 1), id, fecha, nombre, monto, "", documentacion); //generamos un registro con los datos que sacamos de la lista
-                }
+
+                if (!descripcionAnterior.Equals(descripcion)) dataTable.Rows.Add(null , " ", " ", " ", " ", " ", " ", " ");
+
+
+                    if (transaccion.Equals("HABER"))
+                    {
+                        if (verTodo == true)
+                        {
+                            dataTable.Rows.Add((i + 1), id, fecha, nombre, "", monto, documentacion, descripcion);
+                        }
+                        else dataTable.Rows.Add((i + 1), id, fecha, nombre, "", monto, documentacion); //generamos un registro con los datos que sacamos de la lista
+                    }
+                    else
+                    {
+                        if (verTodo == true)
+                        {
+                            dataTable.Rows.Add((i + 1), id, fecha, nombre, "", monto, documentacion, descripcion);
+                        }
+                        else dataTable.Rows.Add((i + 1), id, fecha, nombre, monto, "", documentacion);
+                    }
+
+
+                descripcionAnterior = descripcion;
             }
 
             dataGridView1.DataSource = dataTable; //pasamos los datos al data table
@@ -881,20 +887,12 @@ namespace administracion_contable
             this.textnombre.Enabled = habilitacion;
             this.dateTimePicker1.Enabled = habilitacion;
             this.textBoxMonto.Enabled = habilitacion;
-            this.comboBoxDebeHaber.Enabled = habilitacion;
-            //this.textBoxGrupo.Enabled = habilitacion;
+            this.comboBoxDebeHaber.Enabled = habilitacion;            
             this.buttonAgregar.Enabled = habilitacion;
             this.checkedListBox1.Enabled = habilitacion;
 
-            //if (!habilitacion)
-            //{
-            //    //vaciarCamposDeTexto();
-            //}
-            //else
-            //{
-            //    this.comboBox1.SelectedIndex = 0;
-            //    this.comboBoxDebeHaber.SelectedIndex = 0;
-            //}
+            this.textBoxDescripcion.Enabled = habilitacion;
+
         }
 
         /// <summary>
@@ -928,8 +926,7 @@ namespace administracion_contable
         {           
             if (!hayCamposVacios())
             {
-                if (this.checkedListBox1.CheckedItems.Count > 0)
-                {
+                
                     if (primerNumeroValido())
                     {
                         if (codigoEsCorrecto())
@@ -973,8 +970,7 @@ namespace administracion_contable
                         "\t5. Resultados Negativos\n" +
                         "\t6. Orden\n" +
                         "\t7. Movimiento");
-                }
-                else this.mostrarMensajeError("Debe seleccionar la documentacion respaldatoria.");
+               
             }
             else this.mostrarMensajeError("Debe rellenar todos los campos.");
         }
@@ -1027,9 +1023,7 @@ namespace administracion_contable
             {
                 if (codigoEsCorrecto())
                 {
-                    if (this.checkedListBox1.CheckedItems.Count > 0)
-                    {
-                        string monto = textBoxMonto.Text; //monto
+                    string monto = textBoxMonto.Text; //monto
                         if (esDecimal(monto))
                         {
                             if (esPositivo(monto))
@@ -1056,8 +1050,7 @@ namespace administracion_contable
                             else this.mostrarMensajeError("el monto debe ser positivo mayor a 0");
                         }
                         else this.mostrarMensajeError("el monto debe ser un numero");
-                    }
-                    else this.mostrarMensajeError("Debe seleccionar la documentacion respaldatoria.");
+                    
                 }
                 else if(preguntarSiAgregar())
                 {
@@ -1122,7 +1115,7 @@ namespace administracion_contable
                 conexion.guardarLibroDiario(lista.ElementAt(i));
             }
 
-            conexion.asentarLibroDiario(labelDia.Text);
+            conexion.asentarLibroDiario(labelDia.Text, textBoxDescripcion.Text);
         }
 
         /// <summary>
@@ -1159,6 +1152,13 @@ namespace administracion_contable
                 this.labelDia.Text = selector.Text;
                 cargarTabla(lista);
                 totales(lista);//actualiza los totales 
+                if (lista.Any())
+                {
+                    textBoxDescripcion.Text = lista.ElementAt(0).descripcion;
+                }
+                else textBoxDescripcion.Text = "";
+
+
             }
             else if (!selector.Text.Any()) { }
             else mostrarMensajeError("debe ingresar un numero");
@@ -1298,10 +1298,11 @@ namespace administracion_contable
             int dia = int.Parse(this.labelDia.Text);
             string documentacionRespaldatoria = crearDocumentacionRespaldatoria();
             int index = elementosLibroDiario.Count;
-
+            string descripcion = textBoxDescripcion.Text;
+            
 
             //creamos el objeto y lo agregamos a la lista
-            ElementoLibroDiario elemento = new ElementoLibroDiario(dia, this.darId(id), fecha, nombre, monto, transaccion, documentacionRespaldatoria, index);
+            ElementoLibroDiario elemento = new ElementoLibroDiario(dia, this.darId(id), fecha, nombre, monto, transaccion, documentacionRespaldatoria, index, descripcion);
             return elemento;
         }
 
@@ -1334,9 +1335,17 @@ namespace administracion_contable
             this.conexion.guardarElementoContable(true, codigo, nombre);
         }
 
-        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void verResumenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            List<ElementoLibroDiario> elementos = new List<ElementoLibroDiario>();
+
+            this.conexion.mostrarLibroTotal(elementos);
+            cargarTabla(elementos, true);
+            this.labelDia.Text = "---";
+            selector.Enabled = false;
+
+            if (elementos.Any()) textBoxDescripcion.Text = "";
         }
+
     }    
 }

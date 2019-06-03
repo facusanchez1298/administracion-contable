@@ -71,7 +71,7 @@ namespace administracion_contable
             dataTable.Columns.Add("Nombre", typeof(String));
             dataTable.Columns.Add("Debe", typeof(String));
             dataTable.Columns.Add("Haber", typeof(String));
-            dataTable.Columns.Add("Total", typeof(float));
+            dataTable.Columns.Add("balance", typeof(float));
             dataTable.Columns.Add("Documentacion", typeof(string));
             float debe = 0;
             float haber = 0;
