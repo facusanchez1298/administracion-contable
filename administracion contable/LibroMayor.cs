@@ -61,14 +61,14 @@ namespace administracion_contable
 
         public void cargarTabla(List<ElementoLibroDiario> elementosTabla)
         {
-            //this.elementosLibroDiario = planContables;
+          
 
 
             DataTable dataTable = new DataTable();
 
-            dataTable.Columns.Add("Codigo", typeof(String));
+            //dataTable.Columns.Add("Codigo", typeof(String));
             dataTable.Columns.Add("Fecha", typeof(String));
-            dataTable.Columns.Add("Nombre", typeof(String));
+            //dataTable.Columns.Add("Nombre", typeof(String));
             dataTable.Columns.Add("Debe", typeof(String));
             dataTable.Columns.Add("Haber", typeof(String));
             dataTable.Columns.Add("balance", typeof(float));
@@ -76,6 +76,8 @@ namespace administracion_contable
             float debe = 0;
             float haber = 0;
             float total = 0;
+
+            if(elementosTabla.Any()) dataTable.Rows.Add("cuenta: " + elementosTabla.ElementAt(0).nombre, elementosTabla.ElementAt(0).codigo,  "", null, "");
 
             for (int i = 0; i < elementosTabla.Count; i++) //recorremos toda la lista
             {
@@ -92,21 +94,21 @@ namespace administracion_contable
                 {
                     total += float.Parse(monto);
                     haber += float.Parse(monto);
-                    dataTable.Rows.Add(codigo, fecha, nombre, "", monto, total, documentacion); //generamos un registro con los datos que sacamos de la lista
+                    dataTable.Rows.Add(fecha, "", monto, total, documentacion); //generamos un registro con los datos que sacamos de la lista
                 }
                 else
                 {
                     total -= float.Parse(monto);
                     debe += float.Parse(monto);
-                    dataTable.Rows.Add(codigo, fecha, nombre, monto, "", total, documentacion); //generamos un registro con los datos que sacamos de la lista
+                    dataTable.Rows.Add(fecha, monto, "", total, documentacion); //generamos un registro con los datos que sacamos de la lista
                 }
 
                 if (i + 1 <= elementosTabla.Count - 1)
                 {
                     if (codigo != elementosTabla.ElementAt(i + 1).codigo)
                     {
-                        dataTable.Rows.Add("", "", "TOTAL", debe, haber, total, "");
-                        dataTable.Rows.Add("", "", "", "", "", null, "");
+                        dataTable.Rows.Add( "TOTAL", debe, haber, total, "");
+                        dataTable.Rows.Add(dataTable.NewRow());
 
                         debe = 0;
                         haber = 0;
@@ -115,8 +117,8 @@ namespace administracion_contable
                 }
                 else if (i + 1 > elementosTabla.Count - 1)
                 {
-                    dataTable.Rows.Add("", "", "TOTAL", debe, haber, total, "");
-                    dataTable.Rows.Add("", "", "", "", "", null, "");
+                    dataTable.Rows.Add("TOTAL", debe, haber, total, "");
+                    dataTable.Rows.Add(dataTable.NewRow());
 
                     debe = 0;
                     haber = 0;
@@ -125,7 +127,6 @@ namespace administracion_contable
             }
 
             dataGridView1.DataSource = dataTable; //pasamos los datos al data table
-            //dataGridView1.AutoResizeColumns(); //ponemos que el ancho de la columna se pueda cambiar
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; //ponemos que se adapten al contenedor
 
 
@@ -252,7 +253,7 @@ namespace administracion_contable
                 }
             }
 
-            e.CellStyle.BackColor = Color.LightCyan;
+            
         }
     }
 }

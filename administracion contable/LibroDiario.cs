@@ -774,7 +774,7 @@ namespace administracion_contable
 
 
             DataTable dataTable = new DataTable();
-            dataTable.Columns.Add("index", typeof(int));
+            dataTable.Columns.Add("index", typeof(string));
             dataTable.Columns.Add("codigo", typeof(String));
             dataTable.Columns.Add("fecha", typeof(String));
             dataTable.Columns.Add("nombre", typeof(String));
@@ -798,9 +798,16 @@ namespace administracion_contable
                 string descripcion = elementosTabla.ElementAt(i).descripcion;
 
 
-                if (!descripcionAnterior.Equals(descripcion)) dataTable.Rows.Add(null , " ", " ", " ", " ", " ", " ", " ");
+                if (!descripcionAnterior.Equals(descripcion))
+                {
+                    DataRow row = dataTable.NewRow();
+                    
+                    dataTable.Rows.Add(row);
+                    
+                }
 
-
+                
+                
                     if (transaccion.Equals("HABER"))
                     {
                         if (verTodo == true)
@@ -813,7 +820,7 @@ namespace administracion_contable
                     {
                         if (verTodo == true)
                         {
-                            dataTable.Rows.Add((i + 1), id, fecha, nombre, "", monto, documentacion, descripcion);
+                            dataTable.Rows.Add((i + 1), id, fecha, nombre, monto, "", documentacion, descripcion);
                         }
                         else dataTable.Rows.Add((i + 1), id, fecha, nombre, monto, "", documentacion);
                     }
@@ -823,8 +830,8 @@ namespace administracion_contable
             }
 
             dataGridView1.DataSource = dataTable; //pasamos los datos al data table
-            //dataGridView1.AutoResizeColumns(); //ponemos que el ancho de la columna se pueda cambiar
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; //ponemos que se adapten al contenedor
+           
+
             totales(this.elementosLibroDiario);//actualiza los totales 
 
         }
