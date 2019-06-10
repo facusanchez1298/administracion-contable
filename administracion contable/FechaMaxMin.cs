@@ -34,8 +34,8 @@ namespace administracion_contable
 
 
 
-            LibroDiario libroDiario = new LibroDiario(padre);
-            libroDiario.Show();
+            Seleccion seleccion = new Seleccion(padre);
+            seleccion.Show();
             this.Hide();
             
         }

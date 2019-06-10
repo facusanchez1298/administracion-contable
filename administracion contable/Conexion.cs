@@ -16,8 +16,9 @@ namespace administracion_contable
                                         "numeroIdentificador varchar," +
                                         "nombre varchar);";
 
+
         String crearLibroDiario = "create table if not exists LibrosDiarios(" +
-                                        "dia int," +
+                                        "folio int," +            
                                         "codigo varchar," +
                                         "fecha varchar," +
                                         "nombre varchar," +
@@ -26,7 +27,8 @@ namespace administracion_contable
                                         "documentacion varchar," +
                                         "asentado boolean," +
                                         "indice int," +
-                                        "descripcion);";
+                                        "descripcion," +
+                                        "dia int);";
 
         String crearFecha = "create table if not exists fecha(" +
                                  "inicio varchar," +
@@ -270,13 +272,13 @@ namespace administracion_contable
         /// <summary>
         /// agrega un registro del libro diario a la base de datos
         /// </summary>
-        /// <param name="dia">numero de libro diario</param>
+        /// <param name="folio">numero de libro diario</param>
         /// <param name="codigo">codigo </param>
         /// <param name="date">fecha de la accion</param>
         /// <param name="nombre">nombre identificatorio</param>
         /// <param name="monto">monto de la accion</param>
         /// <param name="transaccion">cargar o abonar</param>
-        public void guardarLibroDiario(int dia, string codigo, DateTime date, string nombre, string monto, string transaccion, string documentacion)
+        public void guardarLibroDiario(int folio, string codigo, DateTime date, string nombre, string monto, string transaccion, string documentacion)
         {
             string fecha = date.ToString("dd/mm/yyyy");
 
@@ -284,7 +286,7 @@ namespace administracion_contable
             {
                 conectar();
 
-                string sql = "insert into LibrosDiarios (dia,codigo,fecha,nombre,monto,transaccion,asentado) values ('" + dia + "','" + codigo + "','" + fecha + "','" + nombre + "'  '" + monto + "','" + transaccion + "','" + documentacion + "', " + false + ")";
+                string sql = "insert into LibrosDiarios (folio,codigo,fecha,nombre,monto,transaccion,asentado) values ('" + folio + "','" + codigo + "','" + fecha + "','" + nombre + "'  '" + monto + "','" + transaccion + "','" + documentacion + "', " + false + ")";
                 SqliteCommand command = new SqliteCommand(sql, this.Connection);
 
 
@@ -324,7 +326,7 @@ namespace administracion_contable
         {
 
             string documentacion = elemento.documentacionRespaldatoria;
-            int dia = elemento.dia;
+            int folio = elemento.folio;
             string codigo = elemento.codigo;
             string fecha = elemento.fecha.ToString();
             string nombre = elemento.nombre;
@@ -338,8 +340,8 @@ namespace administracion_contable
             try
             {
                 conectar();
-                string sql = "insert into LibrosDiarios(dia, codigo, fecha, nombre, monto, transaccion, documentacion, asentado, indice, descripcion)" +
-                    " values (" + dia + ",'" + codigo + "','" + fecha + "','" + nombre + "','" + monto + "','" + transaccion + "','" + documentacion + "'," + false + "," + index + ", '" + descripcion + "')";
+                string sql = "insert into LibrosDiarios(folio, codigo, fecha, nombre, monto, transaccion, documentacion, asentado, indice, descripcion)" +
+                    " values (" + folio + ",'" + codigo + "','" + fecha + "','" + nombre + "','" + monto + "','" + transaccion + "','" + documentacion + "'," + false + "," + index + ", '" + descripcion + "')";
 
                 SqliteCommand command = new SqliteCommand(sql, this.Connection);
 
@@ -371,14 +373,14 @@ namespace administracion_contable
         }
 
         /// <summary>
-        /// carga en la lista los elementos del libro diario que correspondan con el dia
+        /// carga en la lista los elementos del libro diario que correspondan con el folio
         /// </summary>
-        /// <param name="dia">inidice de los elementos a traer</param>
+        /// <param name="folio">inidice de los elementos a traer</param>
         /// <param name="librosDiarios">lista donde vamos a cargar los elementos</param>
-        public void cargarLibroDiario(int dia, List<ElementoLibroDiario> librosDiarios)
+        public void cargarLibroDiario(int folio, List<ElementoLibroDiario> librosDiarios)
         {
             librosDiarios.Clear();
-            String consulta = "select * from LibrosDiarios where dia = " + dia;
+            String consulta = "select * from LibrosDiarios where folio = " + folio;
             try
             {
                 conectar();
@@ -407,14 +409,14 @@ namespace administracion_contable
             string nombre = elemento.nombre;
             string monto = elemento.monto;
             string transaccion = elemento.transaccion;
-            int dia = elemento.dia;
+            int folio = elemento.folio;
 
             try
             {
 
                 conectar();
                 string sql = "update LibrosDiarios set codigo = '" + codigo + "', fecha = '" + fecha + "', nombre = '" + nombre + "', monto = '" + monto + "'" +
-                    ", transaccion = '" + transaccion + "', documentacion = '" + documentacion + "' where dia = " + dia + " and indice = " + index;
+                    ", transaccion = '" + transaccion + "', documentacion = '" + documentacion + "' where folio = " + folio + " and indice = " + index;
                 SqliteCommand command = new SqliteCommand(sql, this.Connection);
 
                 try
@@ -505,24 +507,24 @@ namespace administracion_contable
         }
 
         /// <summary>
-        /// entrega el numero mayor que hay en dia
+        /// entrega el numero mayor que hay en folio
         /// </summary>
-        /// <returns>retorna el numero mas grande de la columna dia, si no hay ninguno retorna 1</returns>
+        /// <returns>retorna el numero mas grande de la columna folio, si no hay ninguno retorna 1</returns>
         public int numeroDelDia()
         {
             try
             {
                 conectar();
-                string sql = "SELECT max(dia) FROM LibrosDiarios where asentado = true ORDER BY dia DESC";
+                string sql = "SELECT max(folio) FROM LibrosDiarios where asentado = true ORDER BY dia DESC";
                 //SELECT max(numeroidentificador) FROM elementodelplancontables ORDER BY Id DESC;
                 SqliteCommand command = new SqliteCommand(sql, Connection);
                 try
                 {
                     SqliteDataReader lector = command.ExecuteReader();//crea el objeto encargado de leer
-                    int dia = lector.GetInt32(0) + 1;
+                    int folio = lector.GetInt32(0) + 1;
                     lector.Close();
                     command.Connection.Close();
-                    return dia;
+                    return folio;
 
                 }
                 catch (Exception)
@@ -605,8 +607,8 @@ namespace administracion_contable
 
                 while (lector.Read())
                 {
-                    //dia,codigo,fecha,monto,transaccion
-                    int dia = lector.GetInt32(0);
+                    //folio,codigo,fecha,monto,transaccion
+                    int folio = lector.GetInt32(0);
                     string codigo = lector.GetString(1);
                     DateTime fecha = DateTime.Parse(lector.GetString(2));
                     string nombre = lector.GetString(3);
@@ -619,7 +621,7 @@ namespace administracion_contable
                     
                     
 
-                    ElementoLibroDiario elementoLibroDiario = new ElementoLibroDiario(dia, codigo, fecha, nombre, monto, transaccion, documentacionRespaldatoria, index, descripcion);
+                    ElementoLibroDiario elementoLibroDiario = new ElementoLibroDiario(folio, codigo, fecha, nombre, monto, transaccion, documentacionRespaldatoria, index, descripcion);
                     elementosLibroDiario.Add(elementoLibroDiario);
                     
                 }
@@ -675,14 +677,14 @@ namespace administracion_contable
         /// <summary>
         /// pone en true el parametro "asentado" de todos los elementos que lo tengan en false
         /// </summary>
-        /// <param name="dia"></param>
-        public void asentarLibroDiario(string dia)
+        /// <param name="folio"></param>
+        public void asentarLibroDiario(string folio)
         {
-            int numero = int.Parse(dia);
+            int numero = int.Parse(folio);
             try
             {
                 conectar();
-                string sql = "update LibrosDiarios set asentado = true where dia = " + numero;
+                string sql = "update LibrosDiarios set asentado = true where folio = " + numero;
                 SqliteCommand command = new SqliteCommand(sql, this.Connection);
 
                 try
@@ -709,14 +711,14 @@ namespace administracion_contable
 
         }
 
-        public void asentarLibroDiario(string dia, string descripcion)
+        public void asentarLibroDiario(string folio, string descripcion)
         {
             
-            int numero = int.Parse(dia);
+            int numero = int.Parse(folio);
             try
             {
                 conectar();
-                string sql = "update LibrosDiarios set asentado = true, descripcion = '" + descripcion + "' where dia = " + numero + ";";
+                string sql = "update LibrosDiarios set asentado = true, descripcion = '" + descripcion + "' where folio = " + numero + ";";
                 SqliteCommand command = new SqliteCommand(sql, this.Connection);
 
                 try
@@ -747,13 +749,13 @@ namespace administracion_contable
         /// elimina un elemento del libro diario
         /// </summary>
         /// <param name="indice">indice del elemento que vamos a borrar</param>
-        /// <param name="dia">de que dia es ese indice</param>
-        internal void borrarElementoLibroDiario(int indice, int dia)
+        /// <param name="folio">de que folio es ese indice</param>
+        internal void borrarElementoLibroDiario(int indice, int folio)
         {
             try
             {
                 conectar();
-                string sql = "delete from LibrosDiarios where dia = " + dia + " and indice = " + indice;
+                string sql = "delete from LibrosDiarios where folio = " + folio + " and indice = " + indice;
                 SqliteCommand command = new SqliteCommand(sql, this.Connection);
 
                 try
@@ -780,15 +782,15 @@ namespace administracion_contable
         }
 
         /// <summary>
-        /// elimina un dia entero de la base de datos
+        /// elimina un folio entero de la base de datos
         /// </summary>
-        /// <param name="dia">dia que vamos a eliminar</param>
-        internal void borrarDiaLibroDiario(int dia)
+        /// <param name="folio">folio que vamos a eliminar</param>
+        internal void borrarDiaLibroDiario(int folio)
         {
             try
             {
                 conectar();
-                string sql = "delete from LibrosDiarios where dia = " + dia;
+                string sql = "delete from LibrosDiarios where folio = " + folio;
                 SqliteCommand command = new SqliteCommand(sql, this.Connection);
 
                 try

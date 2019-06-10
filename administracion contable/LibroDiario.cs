@@ -794,7 +794,7 @@ namespace administracion_contable
                 string monto = elementosTabla.ElementAt(i).monto;
                 string transaccion = elementosTabla.ElementAt(i).transaccion;
                 string documentacion = elementosTabla.ElementAt(i).documentacionRespaldatoria;
-                string dia = elementosTabla.ElementAt(i).dia.ToString();
+                string dia = elementosTabla.ElementAt(i).folio.ToString();
                 string descripcion = elementosTabla.ElementAt(i).descripcion;
 
 

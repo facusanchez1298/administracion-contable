@@ -15,6 +15,7 @@ namespace administracion_contable
         public Inicio()
         {
             Conexion conexion = new Conexion();
+            conexion.borrarBaseDeDatos();
             conexion.crearTablas();
             this.MaximizeBox = false;
             InitializeComponent();
@@ -56,8 +57,8 @@ namespace administracion_contable
             }
             else
             {
-                LibroDiario elementoContable = new LibroDiario(this);
-                elementoContable.Show();
+                Seleccion seleccion = new Seleccion(this);
+                seleccion.Show();
                 this.Hide();
             }
         }
@@ -88,6 +89,13 @@ namespace administracion_contable
                                          MessageBoxIcon.Warning);
 
             return result.ToString();//puede ser ok o cancel
+        }
+
+        private void selecctorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Seleccion elementoContable = new Seleccion(this);
+            elementoContable.Show();
+            this.Hide();
         }
     }
 }

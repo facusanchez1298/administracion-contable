@@ -88,7 +88,7 @@ namespace administracion_contable
                 string transaccion = elementosTabla.ElementAt(i).transaccion;
                 string documentacion = elementosTabla.ElementAt(i).documentacionRespaldatoria;
 
-                string dia = elementosTabla.ElementAt(i).dia.ToString();
+                string dia = elementosTabla.ElementAt(i).folio.ToString();
 
                 if (transaccion.Equals("HABER"))
                 {
