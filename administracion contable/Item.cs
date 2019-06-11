@@ -17,6 +17,7 @@ namespace administracion_contable
 
         private string _descripcion;
         private string _documentacion;
+        private int _index;
 
         [Category("Propiedades")]
         public string descripcion
@@ -30,7 +31,15 @@ namespace administracion_contable
         {
             get { return _documentacion; }
             set { _documentacion = value; lblDocumentacion.Text = value; }
-        } 
+        }
+
+        [Category("Propiedades")]
+        public int index
+        {
+            get { return _index; }
+            set { _index = value; }
+        }
+
         #endregion
 
 
@@ -41,11 +50,18 @@ namespace administracion_contable
             InitializeComponent();
         }
 
-        private void Item_DoubleClick(object sender, EventArgs e)
+        public void Item_DoubleClick(object sender, EventArgs e)
         {
-            LibroDiario libroDiario = new LibroDiario(this.ParentForm);
-            libroDiario.Show();
-            
+            LibroDiario libroDiario = new LibroDiario(this);
+            libroDiario.Show();            
         }
+
+        public void guardar()
+        {
+            LibroDiario libroDiario = new LibroDiario(this);
+            libroDiario.Show();
+        }
+
+       
     }
 }

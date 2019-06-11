@@ -182,7 +182,7 @@ namespace administracion_contable
             }
             else
             {
-                LibroDiario elementoContable = new LibroDiario(this.padre);
+                Seleccion elementoContable = new Seleccion(this.padre);
                 elementoContable.Show();
                 this.Hide();
             }

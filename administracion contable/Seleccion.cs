@@ -32,21 +32,19 @@ namespace administracion_contable
 
         private void buttonAgregar_Click(object sender, EventArgs e)
         {
-            Item[] items = new Item[3];
+            Item item = new Item();
+            item.MaximumSize = new Size(390, 90);
+            item.descripcion = "holi mundo " + flowLayoutPanel1.Controls.Count;
+            item.documentacion = "soy documentacion";
 
-            for (int i = 0; i < items.Length; i++)
-            {
-                items[i] = new Item();
-                items[i].MaximumSize = new Size(390, 90);
-                items[i].descripcion = "holi mundo " + flowLayoutPanel1.Controls.Count;
-                items[i].documentacion = "soy documentacion";
+            item.index = flowLayoutPanel1.Controls.Count + 1;
+            item.guardar();
 
-                
-                this.flowLayoutPanel1.Controls.Add(items[i]);
-            }
-            
+            this.flowLayoutPanel1.Controls.Add(item);
+
+
         }
 
-        
+
     }
 }

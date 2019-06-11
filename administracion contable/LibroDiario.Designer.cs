@@ -434,7 +434,7 @@ namespace administracion_contable
             this.menuVerDiaActual.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
             this.menuVerDiaActual.Size = new System.Drawing.Size(216, 22);
             this.menuVerDiaActual.Text = "Ver Asiento Actual";
-            this.menuVerDiaActual.Click += new System.EventHandler(this.menu_verDiaActual);
+            this.menuVerDiaActual.Click += new System.EventHandler(this.menu_verFolioActual);
             // 
             // verResumenToolStripMenuItem
             // 
@@ -605,7 +605,7 @@ namespace administracion_contable
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.PowderBlue;
-            this.ClientSize = new System.Drawing.Size(771, 549);
+            this.ClientSize = new System.Drawing.Size(771, 584);
             this.Controls.Add(this.textBoxDescripcion);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.selector);

@@ -13,7 +13,7 @@ namespace administracion_contable
         /// <summary>
         /// form al cual va a volver cuando toques salir
         /// </summary>
-        public Form padre;
+        public Item padre;
 
         /// <summary>
         /// aca cargamos los registros del libro diario actual
@@ -45,7 +45,7 @@ namespace administracion_contable
         //
         //
 
-        public LibroDiario(Form padre)
+        public LibroDiario(Item padre)
         {
             //guardamos la referencia al padre
             this.padre = padre;
@@ -94,11 +94,11 @@ namespace administracion_contable
         /// <returns></returns>
         public bool hayCamposVacios()
         {
-            bool nombreEstaVacio = this.textnombre.Text.Any();
+            
 
             bool montoEstaVacio = this.textBoxMonto.Text.Any();
 
-            if ((!nombreEstaVacio) || (!montoEstaVacio))
+            if ((!montoEstaVacio) || (!comboBox1.Text.Any()))
             {
                 return true;
             }
@@ -351,8 +351,7 @@ namespace administracion_contable
         {
             this.Close(); //cierra esta ventana
             padre.Show(); //muesta la ventana que la llamo
-            padre.WindowState = FormWindowState.Maximized; //maximiza al padre, sin esto la otra ventana aparece minimizada
-            padre.WindowState = FormWindowState.Normal; //muestra al padre en su estado normal
+           
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -403,7 +402,7 @@ namespace administracion_contable
                     {
                         this.index = int.Parse(this.textBoxEditar.Text) - 1;
                         int dia = int.Parse(labelDia.Text);
-                        if(dia == conexion.numeroDelDia())
+                        if(dia == conexion.numeroDelDia(this.padre.index))
                         {
                             if ((this.index < elementosLibroDiario.Count) && (this.index >= 0))
                             {
@@ -525,7 +524,7 @@ namespace administracion_contable
 
             if (respuesta.Equals("OK")) this.conexion.borrarElementoLibroDiario(this.index, dia);
 
-            if (dia == conexion.numeroDelDia()) actualizar(elementosLibroDiario);
+            if (dia == conexion.numeroDelDia(this.padre.index)) actualizar(elementosLibroDiario);
             else actualizar(lista);
             
 
@@ -556,19 +555,19 @@ namespace administracion_contable
 
         private void menu_asentarLibroDiario(object sender, EventArgs e)
         { int diaEditado = int.Parse(labelDia.Text);
-            if ((tieneDosElementos(elementosLibroDiario) && conexion.numeroDelDia() == diaEditado) || (conexion.numeroDelDia() != diaEditado && tieneDosElementos(lista)))
+            if ((tieneDosElementos(elementosLibroDiario) && conexion.numeroDelDia(this.padre.index) == diaEditado) || (conexion.numeroDelDia(this.padre.index) != diaEditado && tieneDosElementos(lista)))
             {
-                if ((estaBalanceado(elementosLibroDiario) && conexion.numeroDelDia() == diaEditado) || (conexion.numeroDelDia() != diaEditado && estaBalanceado(lista)))
+                if ((estaBalanceado(elementosLibroDiario) && conexion.numeroDelDia(this.padre.index) == diaEditado) || (conexion.numeroDelDia(this.padre.index) != diaEditado && estaBalanceado(lista)))
                 {
                     if (mostrarMensajeConfirmacion("esta seguro que quiere guardar el libro diario?").Equals("OK"))
                     {
-                        if (int.Parse(this.labelDia.Text) == conexion.numeroDelDia())
+                        if (int.Parse(this.labelDia.Text) == conexion.numeroDelDia(this.padre.index))
                         {
                             
                             this.conexion.asentarLibroDiario(labelDia.Text, textBoxDescripcion.Text);
                             this.cargarSelector();
 
-                            this.selector.SelectedIndex = this.conexion.numeroDelDia() - 1;
+                            this.selector.SelectedIndex = this.conexion.numeroDelDia(this.padre.index) - 1;
                             this.labelDia.Text = selector.Text;
                             
 
@@ -645,7 +644,7 @@ namespace administracion_contable
             
 
             int dia = int.Parse(labelDia.Text);
-            if ((elementosLibroDiario.Any() && dia == conexion.numeroDelDia()) || ( lista.Any() && dia != conexion.numeroDelDia()))
+            if ((elementosLibroDiario.Any() && dia == conexion.numeroDelDia(this.padre.index)) || ( lista.Any() && dia != conexion.numeroDelDia(this.padre.index)))
             {
                 
                 cambiarHabilitacionAgregar(false);
@@ -682,26 +681,26 @@ namespace administracion_contable
 
         private void menu_abrirLibroMayor(object sender, EventArgs e)
         {
-            LibroMayor elementoContable = new LibroMayor(this.padre);
+            LibroMayor elementoContable = new LibroMayor(this.padre.ParentForm);
             elementoContable.Show();
             this.Hide();
         }
     
-        private void menu_verDiaActual(object sender, EventArgs e)
+        private void menu_verFolioActual(object sender, EventArgs e)
         {
             selector.Enabled = true;
-            labelDia.Text = this.conexion.numeroDelDia().ToString();
+            labelDia.Text = this.conexion.numeroDelDia(this.padre.index).ToString();
             cargarTabla(elementosLibroDiario);       
             cambiarHabilitacionAgregar(true);
             cargarSelector();
-            this.selector.SelectedIndex = conexion.numeroDelDia() - 1;
+            this.selector.SelectedIndex = conexion.numeroDelDia(this.padre.index) - 1;
 
 
         }
 
         private void menu_abrirPlanContable(object sender, EventArgs e)
         {
-            PlanContable elementoContable = new PlanContable(this.padre);
+            PlanContable elementoContable = new PlanContable(this.padre.ParentForm);
             elementoContable.Show();
             this.Hide();
         }
@@ -754,7 +753,7 @@ namespace administracion_contable
             this.textBoxMonto.Text = "0,00";
 
             //numero de libro
-            this.labelDia.Text = this.conexion.numeroDelDia().ToString();
+            this.labelDia.Text = this.conexion.numeroDelDia(this.padre.index).ToString();
 
 
             //cargamos libro
@@ -829,7 +828,7 @@ namespace administracion_contable
                 descripcionAnterior = descripcion;
             }
 
-            dataGridView1.DataSource = dataTable; //pasamos los datos al data table
+            dataGridView1.DataSource = dataTable; //pasamos los datos al data table   elementosTabla;//
            
 
             totales(this.elementosLibroDiario);//actualiza los totales 
@@ -879,9 +878,7 @@ namespace administracion_contable
         public void volverAVentanaAnterior()
         {
             this.Close(); //cierra esta ventana
-            padre.Show(); //muesta la ventana que la llamo
-            padre.WindowState = FormWindowState.Maximized; //maximiza al padre, sin esto la otra ventana aparece minimizada
-            padre.WindowState = FormWindowState.Normal; //muestra al padre en su estado normal
+            padre.Show(); //muesta la ventana que la llamo            
         }
 
         /// <summary>
@@ -947,7 +944,7 @@ namespace administracion_contable
                                     {
 
                                         ElementoLibroDiario elemento = crearElemento();  //creamos el objeto y lo agregamos a la lista
-                                        if (int.Parse(this.labelDia.Text) == conexion.numeroDelDia())
+                                        if (int.Parse(this.labelDia.Text) == conexion.numeroDelDia(this.padre.index))
                                         {                                            
                                             this.conexion.guardarLibroDiario(elemento);//guardamos el objeto en la base de datos
                                             actualizar(elementosLibroDiario);
@@ -1036,7 +1033,7 @@ namespace administracion_contable
                             if (esPositivo(monto))
                             {
                                 int dia = int.Parse(labelDia.Text);
-                                if (dia == conexion.numeroDelDia())
+                                if (dia == conexion.numeroDelDia(this.padre.index))
                                 {
                                     ElementoLibroDiario elemento2 = crearElemento();
                                     //guardamos el elemento en la base de datos
@@ -1129,12 +1126,12 @@ namespace administracion_contable
         /// pone en la lista todos los elementos del libro diario
         /// y carga la tabla
         /// </summary>
-        /// <param name="dia"></param>
-        public void actualizar(List<ElementoLibroDiario> libroDiario, int dia = -1)
+        /// <param name="folio"></param>
+        public void actualizar(List<ElementoLibroDiario> libroDiario, int folio = -1)
         {
-            if (dia == -1) dia = int.Parse(this.labelDia.Text);
+            if (folio == -1) folio = int.Parse(this.labelDia.Text);
 
-            this.conexion.cargarLibroDiario(dia, libroDiario);
+            this.conexion.cargarLibroDiario(folio, libroDiario, padre.index);
             cargarTabla(libroDiario);
         }
 
@@ -1148,14 +1145,13 @@ namespace administracion_contable
 
             if (esDecimal(selector.Text))
             {
-
-                if (conexion.numeroDelDia() == int.Parse(selector.Text)) cambiarHabilitacionAgregar(true);
+                if (conexion.numeroDelDia(this.padre.index) == int.Parse(selector.Text)) cambiarHabilitacionAgregar(true);
                 else
                 {
                     cambiarHabilitacionAgregar(false);
                 }
                 
-                this.conexion.cargarLibroDiario(int.Parse(selector.Text), lista);
+                this.conexion.cargarLibroDiario(int.Parse(selector.Text), lista, this.padre.index);
                 this.labelDia.Text = selector.Text;
                 cargarTabla(lista);
                 totales(lista);//actualiza los totales 
@@ -1178,7 +1174,7 @@ namespace administracion_contable
         public void cargarSelector()
         {
             selector.Items.Clear();
-            int maximo = this.conexion.numeroDelDia();
+            int maximo = this.conexion.numeroDelDia(this.padre.index);
 
             for (int i = 1; i <= maximo; i++)
             {
@@ -1297,19 +1293,20 @@ namespace administracion_contable
         /// <returns></returns>
         public ElementoLibroDiario crearElemento()
         {
+            int dia = this.padre.index;
             string monto = this.textBoxMonto.Text;
             string nombre = this.textnombre.Text; //nombre
             string id = this.comboBox1.Text.ToString(); //numero
             DateTime fecha = this.dateTimePicker1.Value; //fecha
             string transaccion = this.comboBoxDebeHaber.Text; //si es debe o haber
-            int dia = int.Parse(this.labelDia.Text);
+            int folio = int.Parse(this.labelDia.Text);
             string documentacionRespaldatoria = crearDocumentacionRespaldatoria();
             int index = elementosLibroDiario.Count;
             string descripcion = textBoxDescripcion.Text;
             
 
             //creamos el objeto y lo agregamos a la lista
-            ElementoLibroDiario elemento = new ElementoLibroDiario(dia, this.darId(id), fecha, nombre, monto, transaccion, documentacionRespaldatoria, index, descripcion);
+            ElementoLibroDiario elemento = new ElementoLibroDiario(folio, this.darId(id), fecha, nombre, monto, transaccion, documentacionRespaldatoria, index, dia, descripcion);
             return elemento;
         }
 

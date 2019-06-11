@@ -89,7 +89,7 @@
 
         #endregion
         private System.Windows.Forms.Button buttonAgregar;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label label1;
+        public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }

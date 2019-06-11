@@ -325,6 +325,7 @@ namespace administracion_contable
         internal void guardarLibroDiario(ElementoLibroDiario elemento)
         {
 
+
             string documentacion = elemento.documentacionRespaldatoria;
             int folio = elemento.folio;
             string codigo = elemento.codigo;
@@ -334,14 +335,16 @@ namespace administracion_contable
             string transaccion = elemento.transaccion;
             int index = elemento.index;
             string descripcion = elemento.descripcion;
+            int dia = elemento.dia;
 
       
 
             try
             {
                 conectar();
-                string sql = "insert into LibrosDiarios(folio, codigo, fecha, nombre, monto, transaccion, documentacion, asentado, indice, descripcion)" +
-                    " values (" + folio + ",'" + codigo + "','" + fecha + "','" + nombre + "','" + monto + "','" + transaccion + "','" + documentacion + "'," + false + "," + index + ", '" + descripcion + "')";
+                string sql = "insert into LibrosDiarios(folio, codigo, fecha, nombre, monto, transaccion, documentacion, asentado, indice, descripcion, dia)" +
+                    " values (" + folio + ",'" + codigo + "','" + fecha + "','" + nombre + "','" + monto + "','" + 
+                    transaccion + "','" + documentacion + "'," + false + "," + index + ", '" + descripcion + "'," + dia + ");";
 
                 SqliteCommand command = new SqliteCommand(sql, this.Connection);
 
@@ -377,10 +380,10 @@ namespace administracion_contable
         /// </summary>
         /// <param name="folio">inidice de los elementos a traer</param>
         /// <param name="librosDiarios">lista donde vamos a cargar los elementos</param>
-        public void cargarLibroDiario(int folio, List<ElementoLibroDiario> librosDiarios)
+        public void cargarLibroDiario(int folio, List<ElementoLibroDiario> librosDiarios, int dia)
         {
             librosDiarios.Clear();
-            String consulta = "select * from LibrosDiarios where folio = " + folio;
+            String consulta = "select * from LibrosDiarios where folio = " + folio + " and dia = " + dia;
             try
             {
                 conectar();
@@ -510,12 +513,12 @@ namespace administracion_contable
         /// entrega el numero mayor que hay en folio
         /// </summary>
         /// <returns>retorna el numero mas grande de la columna folio, si no hay ninguno retorna 1</returns>
-        public int numeroDelDia()
+        public int numeroDelDia(int dia)
         {
             try
             {
                 conectar();
-                string sql = "SELECT max(folio) FROM LibrosDiarios where asentado = true ORDER BY dia DESC";
+                string sql = "SELECT max(folio) FROM LibrosDiarios where asentado = true and dia = " + dia + " ORDER BY dia DESC"; 
                 //SELECT max(numeroidentificador) FROM elementodelplancontables ORDER BY Id DESC;
                 SqliteCommand command = new SqliteCommand(sql, Connection);
                 try
@@ -617,11 +620,12 @@ namespace administracion_contable
                     string documentacionRespaldatoria = lector.GetString(6);
                     int index = lector.GetInt32(8);
                     string descripcion = lector.GetString(9);
+                    int dia = lector.GetInt32(10);
 
                     
                     
 
-                    ElementoLibroDiario elementoLibroDiario = new ElementoLibroDiario(folio, codigo, fecha, nombre, monto, transaccion, documentacionRespaldatoria, index, descripcion);
+                    ElementoLibroDiario elementoLibroDiario = new ElementoLibroDiario(folio, codigo, fecha, nombre, monto, transaccion, documentacionRespaldatoria, index, dia,  descripcion);
                     elementosLibroDiario.Add(elementoLibroDiario);
                     
                 }

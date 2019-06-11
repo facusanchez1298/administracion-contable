@@ -15,8 +15,7 @@ namespace administracion_contable
         public Inicio()
         {
             Conexion conexion = new Conexion();
-            conexion.borrarBaseDeDatos();
-            conexion.crearTablas();
+           conexion.crearTablas();
             this.MaximizeBox = false;
             InitializeComponent();
         }

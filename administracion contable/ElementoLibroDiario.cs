@@ -8,6 +8,7 @@ namespace administracion_contable
 {
     public class ElementoLibroDiario
     {
+        public int dia;
         public string documentacionRespaldatoria { get; set; }
         public int folio;
         public string nombre;
@@ -18,7 +19,7 @@ namespace administracion_contable
         public int index;
         public string descripcion { get; set; }
 
-        public ElementoLibroDiario(int folio, string codigo, DateTime date, string nombre, string monto, string transaccion, string documentacionRespaldatoria, int index, string descripcion = "")
+        public ElementoLibroDiario(int folio, string codigo, DateTime date, string nombre, string monto, string transaccion, string documentacionRespaldatoria, int index, int dia, string descripcion = "")
         {
             this.nombre = nombre;
             this.fecha = date;            
@@ -29,6 +30,7 @@ namespace administracion_contable
             this.documentacionRespaldatoria = documentacionRespaldatoria;
             this.index = index;
             this.descripcion = descripcion;
+            this.dia = dia;
         }
 
         public void cambiarElemento(ElementoLibroDiario nuevo)
@@ -41,6 +43,7 @@ namespace administracion_contable
             this.folio = nuevo.folio;
             this.documentacionRespaldatoria = nuevo.documentacionRespaldatoria;
             this.descripcion = nuevo.descripcion;
+            this.dia = nuevo.dia;
         }
     }
 }
