@@ -13,6 +13,8 @@ namespace administracion_contable
     public partial class Seleccion : Form
     {
         Form padre;
+        List<ElementoLibroDiario> elementoLibroDiarios = new List<ElementoLibroDiario>();
+        Conexion Conexion;
 
         public Seleccion(Form padre)
         {
@@ -22,7 +24,7 @@ namespace administracion_contable
         }
 
 
-        int x = 0;
+        int x = -1;
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
            x++;
@@ -34,17 +36,35 @@ namespace administracion_contable
         {
             Item item = new Item();
             item.MaximumSize = new Size(390, 90);
-            item.descripcion = "holi mundo " + flowLayoutPanel1.Controls.Count;
-            item.documentacion = "soy documentacion";
+            item.Width = flowLayoutPanel1.Width;
 
             item.index = flowLayoutPanel1.Controls.Count + 1;
-            item.guardar();
+            item.editarDatos();
 
             this.flowLayoutPanel1.Controls.Add(item);
 
-
+            item.guardar();
         }
 
+        
 
+        private void Seleccion_Load(object sender, EventArgs e)
+        {
+            recargarLista();
+
+            int dia = 0;
+
+            foreach (ElementoLibroDiario elemento in elementoLibroDiarios)
+            {
+                dia = (dia >= elemento.dia) ? dia : elemento.dia;
+            }
+        }
+
+        public void recargarLista()
+        {
+            elementoLibroDiarios.Clear();
+            Conexion = new Conexion();
+            Conexion.CargarTodoLibroDiario(elementoLibroDiarios); 
+        }
     }
 }

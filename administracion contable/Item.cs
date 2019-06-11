@@ -48,20 +48,31 @@ namespace administracion_contable
         public Item()
         {
             InitializeComponent();
+
+            this.descripcion = "Nombre Generico de dia";
+            this.documentacion = "no se ha hecho referencia a fecha";
         }
 
         public void Item_DoubleClick(object sender, EventArgs e)
         {
-            LibroDiario libroDiario = new LibroDiario(this);
-            libroDiario.Show();            
+            guardar();          
         }
 
         public void guardar()
         {
             LibroDiario libroDiario = new LibroDiario(this);
-            libroDiario.Show();
+            libroDiario.ShowDialog();
         }
 
-       
+        private void button2_Click(object sender, EventArgs e)
+        {
+            editarDatos();
+        }
+
+        public void editarDatos()
+        {
+             DialogoNombre dialogoNombre = new DialogoNombre(this);
+            dialogoNombre.ShowDialog();
+        }
     }
 }

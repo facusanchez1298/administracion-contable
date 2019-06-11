@@ -96,5 +96,11 @@ namespace administracion_contable
             elementoContable.Show();
             this.Hide();
         }
+
+        private void asdToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogoNombre dialogoNombre = new DialogoNombre(new Item());
+            dialogoNombre.ShowDialog();
+        }
     }
 }

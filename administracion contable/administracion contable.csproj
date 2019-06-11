@@ -123,6 +123,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Conexion.cs" />
+    <Compile Include="DialogoNombre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DialogoNombre.Designer.cs">
+      <DependentUpon>DialogoNombre.cs</DependentUpon>
+    </Compile>
     <Compile Include="ElementoLibroDiario.cs" />
     <Compile Include="ElementoPlanContable.cs" />
     <Compile Include="FechaMaxMin.cs">
@@ -169,6 +175,9 @@
     <Compile Include="Seleccion.Designer.cs">
       <DependentUpon>Seleccion.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DialogoNombre.resx">
+      <DependentUpon>DialogoNombre.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FechaMaxMin.resx">
       <DependentUpon>FechaMaxMin.cs</DependentUpon>
     </EmbeddedResource>

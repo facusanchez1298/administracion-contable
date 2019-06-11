@@ -77,7 +77,7 @@ namespace administracion_contable
             float haber = 0;
             float total = 0;
 
-            if(elementosTabla.Any()) dataTable.Rows.Add("cuenta: " + elementosTabla.ElementAt(0).nombre, elementosTabla.ElementAt(0).codigo,  "", null, "");
+            if(elementosTabla.Any()) dataTable.Rows.Add(elementosTabla.ElementAt(0).nombre, elementosTabla.ElementAt(0).codigo,  "", null, "");
 
             for (int i = 0; i < elementosTabla.Count; i++) //recorremos toda la lista
             {
@@ -207,7 +207,7 @@ namespace administracion_contable
 
         public void mostrarTodo()
         {
-            this.conexion.mostrarLibroTotal(elementoLibroDiario);
+            this.conexion.CargarTodoLibroDiario(elementoLibroDiario);
             cargarTabla(elementoLibroDiario);
         }
 
@@ -254,6 +254,11 @@ namespace administracion_contable
             }
 
             
+        }
+
+        private void LibroMayor_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

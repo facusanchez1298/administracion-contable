@@ -1343,7 +1343,7 @@ namespace administracion_contable
         {
             List<ElementoLibroDiario> elementos = new List<ElementoLibroDiario>();
 
-            this.conexion.mostrarLibroTotal(elementos);
+            this.conexion.mostrarLibroTotal(elementos, this.padre.index);
             cargarTabla(elementos, true);
             this.labelDia.Text = "---";
             selector.Enabled = false;

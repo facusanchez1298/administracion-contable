@@ -50,6 +50,9 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.BackgroundColor = System.Drawing.Color.LightCyan;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.GridColor = System.Drawing.Color.LightCyan;
@@ -63,6 +66,8 @@
             // 
             // comboBoxTipo
             // 
+            this.comboBoxTipo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxTipo.FormattingEnabled = true;
             this.comboBoxTipo.Location = new System.Drawing.Point(447, 44);
             this.comboBoxTipo.Name = "comboBoxTipo";
@@ -96,7 +101,7 @@
             this.nuevoToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("nuevoToolStripMenuItem.Image")));
             this.nuevoToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.nuevoToolStripMenuItem.Name = "nuevoToolStripMenuItem";
-            this.nuevoToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.nuevoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.nuevoToolStripMenuItem.Text = "&Nuevo";
             // 
             // abrirToolStripMenuItem
@@ -143,9 +148,12 @@
             // 
             // buttonTodo
             // 
+            this.buttonTodo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonTodo.AutoSize = true;
             this.buttonTodo.Location = new System.Drawing.Point(713, 42);
             this.buttonTodo.Name = "buttonTodo";
-            this.buttonTodo.Size = new System.Drawing.Size(75, 23);
+            this.buttonTodo.Size = new System.Drawing.Size(77, 23);
             this.buttonTodo.TabIndex = 3;
             this.buttonTodo.Text = "MostrarTodo";
             this.buttonTodo.UseVisualStyleBackColor = true;
@@ -153,6 +161,9 @@
             // 
             // buttonBuscar
             // 
+            this.buttonBuscar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonBuscar.AutoSize = true;
             this.buttonBuscar.Location = new System.Drawing.Point(632, 42);
             this.buttonBuscar.Name = "buttonBuscar";
             this.buttonBuscar.Size = new System.Drawing.Size(75, 23);
@@ -163,6 +174,8 @@
             // 
             // codigo
             // 
+            this.codigo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.codigo.AutoSize = true;
             this.codigo.Location = new System.Drawing.Point(444, 28);
             this.codigo.Name = "codigo";
@@ -185,6 +198,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "LibroMayor";
             this.Text = "LibroMayor";
+            this.Load += new System.EventHandler(this.LibroMayor_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

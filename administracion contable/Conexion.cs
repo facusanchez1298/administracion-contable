@@ -550,10 +550,10 @@ namespace administracion_contable
         /// carga todos los elementos de la base de datos en una lista
         /// </summary>
         /// <param name="elementosLibroDiario">lista donde cargamos los elementos</param>
-        public void mostrarLibroTotal(List<ElementoLibroDiario> elementosLibroDiario)
+        public void mostrarLibroTotal(List<ElementoLibroDiario> elementosLibroDiario, int dia)
         {
             elementosLibroDiario.Clear();
-            String consulta = "select * from LibrosDiarios where asentado = true ORDER BY codigo";
+            String consulta = "select * from LibrosDiarios where asentado = true and dia = " + dia + " ORDER BY codigo";
             try
             {
                 conectar();
@@ -819,7 +819,28 @@ namespace administracion_contable
             }
         }
 
-
+        /// <summary>
+        /// carga todos los libros diarios en una lista
+        /// </summary>
+        /// <param name="lista"></param>
+        public void CargarTodoLibroDiario(List<ElementoLibroDiario> lista)
+        {
+            lista.Clear();
+            String consulta = "select * from LibrosDiarios";
+            try
+            {
+                conectar();
+                leerLibroDiario(consulta, lista);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("error: " + e);
+            }
+            finally
+            {
+                close();
+            }
+        }
 
 
 
@@ -1143,7 +1164,7 @@ namespace administracion_contable
         public bool yaTieneAsiento(string codigo)
         {
             List<ElementoLibroDiario> lista = new List<ElementoLibroDiario>();
-            mostrarLibroTotal(lista);
+            CargarTodoLibroDiario(lista);
             ElementoLibroDiario cosa = lista.Find(q => q.codigo == codigo);
 
             return cosa != null;          
